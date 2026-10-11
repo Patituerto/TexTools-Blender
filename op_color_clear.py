@@ -5,7 +5,7 @@ from . import utilities_color
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_clear"
+	bl_idname = "uv.ttbake_color_clear"
 	bl_label = "Clear Colors"
 	bl_description = "Clears the Materials or Vertex Colors on the active Object"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -34,7 +34,7 @@ class op(bpy.types.Operator):
 def clear_colors(self, context):
 	obj = bpy.context.active_object
 
-	if bpy.context.scene.texToolsSettings.color_assign_mode == 'MATERIALS':
+	if bpy.context.scene.ttBakeSettings.color_assign_mode == 'MATERIALS':
 		previous_mode = bpy.context.active_object.mode
 		bpy.ops.object.mode_set(mode='OBJECT')
 		# Clear material slots

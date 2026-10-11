@@ -6,7 +6,7 @@ from . import utilities_color
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_select"
+	bl_idname = "uv.ttbake_color_select"
 	bl_label = "Select by Color"
 	bl_description = "Select faces by this color"
 	bl_options = {'UNDO'}

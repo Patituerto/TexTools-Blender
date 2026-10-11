@@ -5,7 +5,7 @@ from .settings import tt_settings
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_io_export"
+	bl_idname = "uv.ttbake_color_io_export"
 	bl_label = "Export"
 	bl_description = "Export current color palette to clipboard"
 
@@ -27,4 +27,4 @@ def export_colors(self, context):
 		hex_colors.append( utilities_color.color_to_hex( color) )
 
 	bpy.context.window_manager.clipboard = ", ".join(hex_colors)
-	bpy.ops.ui.textools_popup('INVOKE_DEFAULT', message=f"{len(hex_colors)}x colors copied to clipboard")
+	bpy.ops.ui.ttbake_popup('INVOKE_DEFAULT', message=f"{len(hex_colors)}x colors copied to clipboard")

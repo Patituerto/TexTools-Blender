@@ -3,7 +3,7 @@ import bpy
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_texture_preview_cleanup"
+	bl_idname = "uv.ttbake_texture_preview_cleanup"
 	bl_label = "Texture Preview Cleanup"
 	bl_description = "Remove and unlink texture preview data from the selected Objects; + Alt , it's applied to all Objects in the Blendfile"
 	bl_options = {'REGISTER', 'UNDO'}

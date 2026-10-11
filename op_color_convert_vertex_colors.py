@@ -11,7 +11,7 @@ gamma = 2.2
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_convert_to_vertex_colors"
+	bl_idname = "uv.ttbake_color_convert_to_vertex_colors"
 	bl_label = "Pack Texture"
 	bl_description = "Pack ID Colors into single texture and UVs"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -91,6 +91,6 @@ def convert_vertex_colors(self, context):
 					space.shading.type = 'SOLID'
 
 	# Clear materials?
-	#bpy.ops.uv.textools_color_clear()
+	#bpy.ops.uv.ttbake_color_clear()
 
-	bpy.ops.ui.textools_popup('INVOKE_DEFAULT', message="Vertex colors assigned")
+	bpy.ops.ui.ttbake_popup('INVOKE_DEFAULT', message="Vertex colors assigned")

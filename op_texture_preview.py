@@ -11,7 +11,7 @@ gamma = 2.2
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_texture_preview"
+	bl_idname = "uv.ttbake_texture_preview"
 	bl_label = "Preview Texture"
 	bl_description = "Preview the background Image of the UV Editor as a Material override on the appropriate selected Object"
 	bl_options = {'REGISTER', 'UNDO'}

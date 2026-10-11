@@ -6,7 +6,7 @@ from . import utilities_color
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_select_vertex"
+	bl_idname = "uv.ttbake_color_select_vertex"
 	bl_label = "Select by Vertex Color"
 	bl_description = "Select faces by this vertex color"
 	bl_options = {'UNDO'}
@@ -61,7 +61,7 @@ def select_color(self, context, index):
 
 	# Due the averaging color calculation we need to have a threshold.
 	# Depending on the colors this might need to be adjusted by the user
-	threshold = bpy.context.scene.texToolsSettings.vertex_color_threshold
+	threshold = bpy.context.scene.ttBakeSettings.vertex_color_threshold
 
 	r = g = b = 0
 	for p in obj.data.polygons:

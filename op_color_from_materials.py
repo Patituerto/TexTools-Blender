@@ -5,7 +5,7 @@ from . import utilities_color
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_from_materials"
+	bl_idname = "uv.ttbake_color_from_materials"
 	bl_label = "Color Elements"
 	bl_description = "Assign a color ID to each mesh material slot"
 	bl_options = {'REGISTER', 'UNDO'}

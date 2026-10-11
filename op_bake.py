@@ -3,7 +3,6 @@ import os
 import time
 
 from . import utilities_ui
-from . import utilities_uv
 from . import settings
 from . import utilities_bake as ub
 
@@ -61,7 +60,7 @@ else:
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_bake"
+	bl_idname = "uv.ttbake_bake"
 	bl_label = "Bake"
 	bl_description = "Bake selected objects"
 
@@ -311,14 +310,14 @@ def bake(self, mode, size, bake_force, sampling_scale, circular_report, color_re
 
 	for bset in settings.sets:
 		if (len(bset.objects_high) + len(bset.objects_float)) == 0:
-			tiles.append(utilities_uv.get_UDIM_tiles(bset.objects_low))
+			tiles.append(ub.get_UDIM_tiles(bset.objects_low))
 			for obj in bset.objects_low:
 				if material_loaded:
 					use_material_loaded(obj)
 				else:
 					use_copied_mtls(obj)
 		else:
-			tiles.append(utilities_uv.get_UDIM_tiles(bset.objects_high + bset.objects_float))
+			tiles.append(ub.get_UDIM_tiles(bset.objects_high + bset.objects_float))
 			if material_loaded:
 				for obj in bset.objects_low:
 					use_copied_mtls(obj)

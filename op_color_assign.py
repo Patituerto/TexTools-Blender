@@ -9,7 +9,7 @@ gamma = 2.2
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_assign"
+	bl_idname = "uv.ttbake_color_assign"
 	bl_label = "Assign Color"
 	bl_description = "Assign color to selected Objects or faces in Edit Mode"
 	bl_options = {'UNDO'}

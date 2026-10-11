@@ -29,7 +29,7 @@ sets = []
 
 
 def tt_settings():
-	return bpy.context.scene.texToolsSettings
+	return bpy.context.scene.ttBakeSettings
 
 def prefs():
 	return bpy.context.preferences.addons[__package__].preferences

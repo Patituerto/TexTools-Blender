@@ -3,7 +3,7 @@ import bpy
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_texture_remove"
+	bl_idname = "uv.ttbake_texture_remove"
 	bl_label = "Remove Texture"
 
 	name : bpy.props.StringProperty(name="Image name", default="")

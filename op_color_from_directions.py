@@ -6,7 +6,7 @@ from . import utilities_color
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_from_directions"
+	bl_idname = "uv.ttbake_color_from_directions"
 	bl_label = "Color Directions"
 	bl_description = "Assign a color ID to different face directions"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -89,7 +89,7 @@ def color_elements(self, context):
 				face_directions['bottom'].append(face.index)
 
 	count = int(self.directions)
-	bpy.context.scene.texToolsSettings.color_ID_count = count
+	bpy.context.scene.ttBakeSettings.color_ID_count = count
 
 	groups = []
 
@@ -127,9 +127,9 @@ def color_elements(self, context):
 			bm.faces[index_face].select = True
 
 		# Assign to selection
-		bpy.ops.uv.textools_color_assign(index=index_color)
+		bpy.ops.uv.ttbake_color_assign(index=index_color)
 
-		index_color = (index_color+1) % bpy.context.scene.texToolsSettings.color_ID_count
+		index_color = (index_color+1) % bpy.context.scene.ttBakeSettings.color_ID_count
 
 	bpy.ops.object.mode_set(mode='OBJECT')
 	utilities_color.validate_face_colors(obj)

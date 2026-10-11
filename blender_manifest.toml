@@ -1,0 +1,26 @@
+schema_version = "1.0.0"
+
+id = "textools_bake"
+version = "1.0.0"
+name = "TexTools Bake"
+tagline = "Texture baking and Color ID tools based on TexTools"
+maintainer = "Gabo Salcedo"
+type = "add-on"
+
+website = "https://github.com/Patituerto/TexTools-Blender/tree/textools-bake"
+
+tags = ["Bake", "Material", "UV"]
+
+blender_version_min = "4.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+copyright = [
+  "2018 renderhjs",
+  "2019-2024 Sav Martin, franMarz and TexTools contributors",
+  "2026 Gabo Salcedo",
+]
+
+[permissions]
+files = "Load bundled resources and write temporary bake images"

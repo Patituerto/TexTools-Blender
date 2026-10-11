@@ -13,7 +13,7 @@ gamma = 2.2
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_convert_to_texture"
+	bl_idname = "uv.ttbake_color_convert_to_texture"
 	bl_label = "Pack Texture"
 	bl_description = "Pack ID Colors into single texture and UVs"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -124,7 +124,7 @@ def pack_texture(self, context):
 
 	# Remove Slots & add one
 	bpy.ops.object.mode_set(mode='OBJECT')
-	bpy.ops.uv.textools_color_clear()
+	bpy.ops.uv.ttbake_color_clear()
 	bpy.ops.object.material_slot_add()
 	
 	#Create material with image
@@ -145,4 +145,4 @@ def pack_texture(self, context):
 					space.shading.type = 'SOLID'
 					space.shading.color_type = 'TEXTURE'
 
-	bpy.ops.ui.textools_popup('INVOKE_DEFAULT', message=f"Packed texture with {tt_settings().color_ID_count} color IDs")
+	bpy.ops.ui.ttbake_popup('INVOKE_DEFAULT', message=f"Packed texture with {tt_settings().color_ID_count} color IDs")

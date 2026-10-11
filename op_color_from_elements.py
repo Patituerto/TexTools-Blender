@@ -6,7 +6,7 @@ from . import utilities_color
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_from_elements"
+	bl_idname = "uv.ttbake_color_from_elements"
 	bl_label = "Color Elements"
 	bl_description = "Assign a color ID to each mesh element"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -61,11 +61,11 @@ def color_elements(self, context):
 
 
 	# Assign color count (caps automatically e.g. max 20)
-	bpy.context.scene.texToolsSettings.color_ID_count = len(groups)
+	bpy.context.scene.ttBakeSettings.color_ID_count = len(groups)
 	gamma = 2.2
 
-	for i in range(bpy.context.scene.texToolsSettings.color_ID_count):
-		color = utilities_color.get_color_id(i, bpy.context.scene.texToolsSettings.color_ID_count)
+	for i in range(bpy.context.scene.ttBakeSettings.color_ID_count):
+		color = utilities_color.get_color_id(i, bpy.context.scene.ttBakeSettings.color_ID_count)
 		# Fix Gamma
 		color[0] = pow(color[0] , gamma)
 		color[1] = pow(color[1] , gamma)
@@ -89,7 +89,7 @@ def color_elements(self, context):
 		obj.active_material_index = index_color
 		bpy.ops.object.material_slot_assign()
 
-		index_color = (index_color+1) % bpy.context.scene.texToolsSettings.color_ID_count
+		index_color = (index_color+1) % bpy.context.scene.ttBakeSettings.color_ID_count
 
 	bpy.ops.object.mode_set(mode='OBJECT')
 	utilities_color.validate_face_colors(obj)

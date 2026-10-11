@@ -3,13 +3,13 @@ import os
 
 from . import utilities_bake
 from . import op_bake
-from .t3dn_bip import previews
+import bpy.utils.previews
 from .settings import tt_settings, prefs
 
 from bpy.props import StringProperty
 
 class op_popup(bpy.types.Operator):
-	bl_idname = "ui.textools_popup"
+	bl_idname = "ui.ttbake_popup"
 	bl_label = "Message"
 
 	message: StringProperty()
@@ -39,33 +39,35 @@ size_textures = [
 	('8192', '8192', '')
 ]
 
-# Preview collections created in the register function.
-preview_icons = previews.new(max_size=(32, 32))
-thumbnail_previews: 'previews.ImagePreviewCollection | None' = None
+# Preview collections (standard bpy.utils.previews, loaded from the PNG files)
+preview_icons = None
+thumbnail_previews = None
 
 
 def icon_register(fileName):
 	name = fileName.split('.')[0]  # Don't include file extension
-	icons_location = os.path.join(os.path.dirname(__file__), "icons_bip")
-	preview_icons.load_safe(name, os.path.join(icons_location, fileName), 'IMAGE')
+	if name in preview_icons:
+		return
+	icons_location = os.path.join(os.path.dirname(__file__), "icons")
+	preview_icons.load(name, os.path.join(icons_location, name + ".png"), 'IMAGE')
 
 
 def icon_get(name):
+	if preview_icons is None or name not in preview_icons:
+		return 0
 	return preview_icons[name].icon_id
 
 
 def generate_bake_mode_previews():
-	image_location = os.path.join(os.path.dirname(__file__), "resources/bake_modes_bip")	
+	image_location = os.path.join(os.path.dirname(__file__), "resources", "bake_modes")
 	enum_items = []
-	
-	# Generate the thumbnails
-	for i, image in enumerate(os.listdir(image_location)):
-		mode = image[0:-4]
-		if mode in op_bake.modes:
-			filepath = os.path.join(image_location, image)
-			thumb = thumbnail_previews.load_safe(filepath, filepath, 'IMAGE')
-			enum_items.append((image, mode, "", thumb.icon_id, i))
-	
+	for i, mode in enumerate(sorted(op_bake.modes)):
+		filepath = os.path.join(image_location, mode + ".png")
+		icon_id = 0
+		if os.path.exists(filepath):
+			thumb = thumbnail_previews.load(mode, filepath, 'IMAGE')
+			icon_id = thumb.icon_id
+		enum_items.append((mode, mode, "", icon_id, i))
 	return enum_items
 
 
@@ -104,7 +106,7 @@ def get_padding():
 
 
 def get_bake_mode():
-	return str(bpy.context.scene.TT_bake_mode).replace('.bip', '').lower()
+	return str(bpy.context.scene.TTB_bake_mode).lower()
 
 
 def set_bake_color_space_int(bake_mode):
@@ -141,24 +143,29 @@ def on_bakemode_set(self, context):
 
 
 
-def register():
-	global thumbnail_previews
-	thumbnail_previews = previews.new(max_size=(128, 128))
+_bake_mode_items = []
 
-	# This is an EnumProperty for storing all images
-	# You really can save it anywhere in bpy.types.*  Just make sure the location makes sense
-	bpy.types.Scene.TT_bake_mode = bpy.props.EnumProperty(
-		items=generate_bake_mode_previews(),
+
+def register():
+	global preview_icons, thumbnail_previews, _bake_mode_items
+	preview_icons = bpy.utils.previews.new()
+	thumbnail_previews = bpy.utils.previews.new()
+
+	# Keep a module level reference to the enum items so their strings stay alive
+	_bake_mode_items = generate_bake_mode_previews()
+	bpy.types.Scene.TTB_bake_mode = bpy.props.EnumProperty(
+		items=_bake_mode_items,
 		update=on_bakemode_set,
-		default='normal_tangent.bip'
+		default='normal_tangent'
 	)
 
 
 def unregister():
-	try:
-		previews.remove(thumbnail_previews)
-		previews.remove(preview_icons)
-		# del bpy.types.Scene.TT_bake_mode
-
-	except ResourceWarning as e:
-		print(e)
+	global preview_icons, thumbnail_previews
+	for collection in (thumbnail_previews, preview_icons):
+		if collection is not None:
+			bpy.utils.previews.remove(collection)
+	preview_icons = None
+	thumbnail_previews = None
+	if hasattr(bpy.types.Scene, "TTB_bake_mode"):
+		del bpy.types.Scene.TTB_bake_mode

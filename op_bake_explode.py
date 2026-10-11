@@ -9,7 +9,7 @@ frame_range = 50
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_bake_explode"
+	bl_idname = "uv.ttbake_bake_explode"
 	bl_label = "Explode"
 	bl_description = "Explode selected bake pairs with animation keyframes"
 	bl_options = {'REGISTER', 'UNDO'}

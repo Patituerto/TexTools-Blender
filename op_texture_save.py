@@ -5,7 +5,7 @@ from bpy.props import *
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_texture_save"
+	bl_idname = "uv.ttbake_texture_save"
 	bl_label = "Save Texture"
 	bl_description = "Save the texture"
 
@@ -51,7 +51,7 @@ def save_texture(path):
 
 
 # class op(bpy.types.Operator):
-# 	bl_idname = "uv.textools_texture_save"
+# 	bl_idname = "uv.ttbake_texture_save"
 # 	bl_label = "Save Texture"
 # 	bl_description = "Save the texture"
 
@@ -71,7 +71,7 @@ def save_texture(path):
 
 '''
 class op_ui_image_save(bpy.types.Operator):
-	bl_idname = "uv.textools_ui_image_save"
+	bl_idname = "uv.ttbake_ui_image_save"
 	bl_label = "Save image"
 	bl_description = "Save this image"
 

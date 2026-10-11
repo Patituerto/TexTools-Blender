@@ -5,7 +5,7 @@ from . import op_bake
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_texture_select"
+	bl_idname = "uv.ttbake_texture_select"
 	bl_label = "Select Texture"
 	bl_description = "Select the texture and bake mode"
 
@@ -32,16 +32,18 @@ def select_texture(self, context):
 		if mode in self.name:
 			found_modes.append(mode)
 	
+	if not found_modes:
+		return
 	mode = max(found_modes, key=len)
 	print("Found mode: "+mode)
 
-	prop = bpy.context.scene.bl_rna.properties["TT_bake_mode"]
+	prop = bpy.context.scene.bl_rna.properties["TTB_bake_mode"]
 	enum_values = [e.identifier for e in prop.enum_items]
 	
 	# find matching enum
 	for key in enum_values:
-		if (mode+".bip") == key:
-			bpy.context.scene.TT_bake_mode = key
+		if mode == key:
+			bpy.context.scene.TTB_bake_mode = key
 			break
 	
 	# Set background image

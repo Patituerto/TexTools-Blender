@@ -5,7 +5,7 @@ import os, sys, subprocess
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_texture_open"
+	bl_idname = "uv.ttbake_texture_open"
 	bl_label = "Open Texture"
 	bl_description = "Open the texture on the system"
 

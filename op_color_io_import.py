@@ -6,7 +6,7 @@ from . import utilities_color
 
 
 class op(bpy.types.Operator):
-	bl_idname = "uv.textools_color_io_import"
+	bl_idname = "uv.ttbake_color_io_import"
 	bl_label = "Import"
 	bl_description = "Import hex colors from the clipboard as current color palette"
 
@@ -35,16 +35,16 @@ def import_colors(self, context):
 			return
 		else:
 			name = "color_ID_color_{}".format(i)
-			if hasattr(bpy.context.scene.texToolsSettings, name):
+			if hasattr(bpy.context.scene.ttBakeSettings, name):
 				# Color Index exists
 				color = utilities_color.hex_to_color( hex_strings[i] )
-				setattr(bpy.context.scene.texToolsSettings, name, color)
+				setattr(bpy.context.scene.ttBakeSettings, name, color)
 			else:
 				# More colors imported than supported
 				self.report({'ERROR_INVALID_INPUT'}, f"Only {i}x colors have been imported instead of {len(hex_strings)}x")
 				return
 	
 	# Set number of colors
-	bpy.context.scene.texToolsSettings.color_ID_count = len(hex_strings)
+	bpy.context.scene.ttBakeSettings.color_ID_count = len(hex_strings)
 
-	bpy.ops.ui.textools_popup('INVOKE_DEFAULT', message=f"{len(hex_strings)}x colors imported from clipboard")
+	bpy.ops.ui.ttbake_popup('INVOKE_DEFAULT', message=f"{len(hex_strings)}x colors imported from clipboard")
