@@ -5,6 +5,7 @@ import time
 from . import utilities_ui
 from . import settings
 from . import utilities_bake as ub
+from . import utilities_export
 
 from .settings import tt_settings, prefs
 
@@ -543,7 +544,12 @@ def bake(self, mode, size, bake_force, sampling_scale, circular_report, color_re
 				if modes[mode].composite:
 					apply_composite(image_name, modes[mode].composite, tt_settings().bake_curvature_size)
 
-			# TODO: if autosave: image.save()
+				if tt_settings().bake_auto_save:
+					saved = utilities_export.save_image(bpy.data.images[image_name])
+					if saved:
+						print(f"TexTools Bake: saved {saved}")
+					else:
+						self.report({'WARNING'}, "Auto save skipped: save the .blend file first or choose an absolute folder")
 
 
 	finally:
@@ -838,7 +844,7 @@ def setup_image(color_report, mode, name, width, height, tiles, material_load=Fa
 		resize(image)
 
 	def image_create():
-		is_float_32 = prefs().bake_32bit_float == '32'
+		is_float_32 = utilities_export.wants_float()
 
 		if tiles and settings.bversion >= 3.2:
 			# Create a full size new tiled image with alpha background

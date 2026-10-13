@@ -2,7 +2,7 @@ bl_info = {
 	"name": "TexTools Bake",
 	"description": "Texture baking and Color ID tools, based on TexTools.",
 	"author": "Gabo Salcedo; original TexTools by renderhjs, franMarz, Sav Martin",
-	"version": (1, 0, 0),
+	"version": (1, 1, 0),
 	"blender": (4, 2, 0),
 	"category": "Render",
 	"location": "Image Editor > Sidebar > 'TexTools Bake' tab",
@@ -22,6 +22,7 @@ from . import utilities_color
 from . import op_bake
 from . import op_bake_explode
 from . import op_bake_organize_names
+from . import op_bake_orm
 from . import op_texture_preview
 from . import op_texture_preview_cleanup
 from . import op_texture_save
@@ -545,6 +546,25 @@ class TexToolsBakeSettings(PropertyGroup):
 		get = get_bake_back_color, 
 		set = set_bake_back_color
 	)
+	bake_auto_save : BoolProperty(
+		name="Auto Save",
+		description="Save every baked texture to the output folder when the bake finishes",
+		default=False
+	)
+	bake_save_dir : StringProperty(
+		name="Folder",
+		description="Output folder for saved textures. '//' means relative to the .blend file",
+		default="//textures/",
+		subtype='DIR_PATH'
+	)
+	bake_file_format : EnumProperty(items=
+		[('PNG', 'PNG', 'Lossless 8 bit, works everywhere'),
+		('TARGA', 'TGA', 'Lossless 8 bit, common in game pipelines'),
+		('TIFF', 'TIFF', 'Lossless'),
+		('OPEN_EXR', 'EXR', 'High precision float, use with 32 bit bakes')],
+		name="Format",
+		default='PNG'
+	)
 	bake_freeze_selection : BoolProperty(
 		name="Lock",
 		description="Lock baking sets, don't change with selection",
@@ -681,6 +701,20 @@ class TTBAKE_PT_bake(Panel):
 		row = col.row(align=True)
 		row.scale_y = 1.75
 		row.operator(op_bake.op.bl_idname, text=f'Bake {count}x', icon_value=icon_get('op_bake'))
+
+		# ORM: AO + Roughness + Metallic packed for game engines
+		row = col.row(align=True)
+		row.operator(op_bake_orm.op_bake_orm.bl_idname, text="Bake ORM", icon='NODE_COMPOSITING')
+		row.operator(op_bake_orm.op_pack.bl_idname, text="", icon='FILE_REFRESH')
+
+		# Auto save
+		row = col.row(align=True)
+		row.prop(tt_settings(), "bake_auto_save", text="Auto Save", icon='FILE_TICK')
+		sub = row.row(align=True)
+		sub.active = tt_settings().bake_auto_save
+		sub.prop(tt_settings(), "bake_file_format", text="")
+		if tt_settings().bake_auto_save:
+			col.prop(tt_settings(), "bake_save_dir", text="")
 
 		bake_mode = utilities_ui.get_bake_mode()
 
@@ -1067,6 +1101,8 @@ classes = (
 	op_bake.op,
 	op_bake_explode.op,
 	op_bake_organize_names.op,
+	op_bake_orm.op_pack,
+	op_bake_orm.op_bake_orm,
 	op_texture_preview.op,
 	op_texture_preview_cleanup.op,
 	op_texture_save.op,

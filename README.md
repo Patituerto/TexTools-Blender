@@ -6,6 +6,8 @@ TexTools was created by [renderhjs](https://github.com/renderhjs), ported to Ble
 
 ## Features
 - 40+ bake modes (normals, AO, curvature, cavity, PBR channels, IDs, thickness…), single or high-to-low with automatic pairing by name (`_low`, `_high`, `_cage`, `_float`).
+- **Bake ORM**: one click bakes AO, Roughness and Metallic and packs them into a single `<set>_ORM` texture (R = AO, G = Roughness, B = Metallic, linear) for Unreal, Unity and Godot. The refresh button re-packs already baked maps.
+- **Auto Save**: writes every baked texture to a folder (default `//textures/`, next to the .blend) as PNG, TGA, TIFF or EXR.
 - Color ID: assign ID colors as materials or vertex colors, convert to texture atlas.
 - Can be installed side by side with the original TexTools (separate tab and operator IDs).
 
