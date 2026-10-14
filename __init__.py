@@ -2,7 +2,7 @@ bl_info = {
 	"name": "TexTools Bake",
 	"description": "Texture baking and Color ID tools, based on TexTools.",
 	"author": "Gabo Salcedo; original TexTools by renderhjs, franMarz, Sav Martin",
-	"version": (1, 1, 0),
+	"version": (1, 1, 1),
 	"blender": (4, 2, 0),
 	"category": "Render",
 	"location": "Image Editor > Sidebar > 'TexTools Bake' tab",
@@ -1052,6 +1052,7 @@ class TTBAKE_PT_color_id(Panel):
 			max_columns = tt_settings().color_ID_count
 
 		count = math.ceil(tt_settings().color_ID_count / max_columns)*max_columns
+		has_targets = len(utilities_color.get_target_objects(context)[0]) > 0
 
 		# TODO: Simplify
 
@@ -1065,13 +1066,11 @@ class TTBAKE_PT_color_id(Panel):
 				col.prop(tt_settings(), f"color_ID_color_{i}", text='')
 				col.operator(op_color_assign.op.bl_idname, text='', icon="FILE_TICK").index = i
 	
-				if bpy.context.active_object:
-					if bpy.context.active_object in bpy.context.selected_objects:
-						if len(bpy.context.selected_objects) == 1:
-							if bpy.context.active_object.type == 'MESH' and context.scene.ttBakeSettings.color_assign_mode == 'MATERIALS':
-								col.operator(op_color_select.op.bl_idname, text="", icon = "FACESEL").index = i
-							else:
-								col.operator(op_color_select_vertex.op.bl_idname, text="", icon = "FACESEL").index = i
+				if has_targets:
+					if context.scene.ttBakeSettings.color_assign_mode == 'MATERIALS':
+						col.operator(op_color_select.op.bl_idname, text="", icon = "FACESEL").index = i
+					else:
+						col.operator(op_color_select_vertex.op.bl_idname, text="", icon = "FACESEL").index = i
 			else:
 				col.label(text=" ")
 

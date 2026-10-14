@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "textools_bake"
-version = "1.1.0"
+version = "1.1.1"
 name = "TexTools Bake"
 tagline = "Texture baking and Color ID tools based on TexTools"
 maintainer = "Gabo Salcedo"

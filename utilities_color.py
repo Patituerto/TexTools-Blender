@@ -154,7 +154,47 @@ def get_color_id(index, count, jitter=False):
 	return color
 
 
+VERTEX_COLOR_LAYER = 'TexTools_colorID'
+
+
+def get_target_objects(context):
+	"""Mesh objects to work on, and whether only their selected faces count.
+	In Edit Mode every mesh in the (multi-object) edit session is used, not only the active one."""
+	if context.mode == 'EDIT_MESH':
+		return [o for o in context.objects_in_mode_unique_data if o.type == 'MESH'], True
+	return [o for o in context.selected_objects if o.type == 'MESH'], False
+
+
+def get_bmesh(obj, edit):
+	if edit:
+		return bmesh.from_edit_mesh(obj.data)
+	bm = bmesh.new()
+	bm.from_mesh(obj.data)
+	return bm
+
+
+def finish_bmesh(obj, bm, edit):
+	if edit:
+		bmesh.update_edit_mesh(obj.data)
+	else:
+		bm.to_mesh(obj.data)
+		bm.free()
+		obj.data.update()
+
+
+def vertex_id_color(index):
+	"""Color written to the vertex color layer for a Color ID (same values the paint brush stored before)."""
+	color = get_color(index).copy()
+	if bpy.context.preferences.addons[__package__].preferences.bool_color_id_vertex_color_gamma:
+		color[0] = pow(color[0], 1/gamma)
+		color[1] = pow(color[1], 1/gamma)
+		color[2] = pow(color[2], 1/gamma)
+	return color
+
+
 def update_properties_tab():
+	if not bpy.context.screen:
+		return
 	for area in bpy.context.screen.areas:
 		if area.type == 'PROPERTIES':
 			for space in area.spaces:
@@ -166,6 +206,8 @@ def update_properties_tab():
 
 
 def update_view_mode():
+	if not bpy.context.screen:
+		return
 	for area in bpy.context.screen.areas:
 		if area.type == 'VIEW_3D':
 			for space in area.spaces:

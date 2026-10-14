@@ -1,63 +1,56 @@
 import bpy
-import bmesh
 
 from . import utilities_color
-
 
 
 class op(bpy.types.Operator):
 	bl_idname = "uv.ttbake_color_select"
 	bl_label = "Select by Color"
-	bl_description = "Select faces by this color"
+	bl_description = "Select the faces with this Color ID material, in every selected or edited mesh"
 	bl_options = {'UNDO'}
-	
+
 	index : bpy.props.IntProperty(description="Color Index", default=0)
 
 	@classmethod
 	def poll(cls, context):
-		if bpy.context.area.ui_type != 'UV':
+		if not context.area or context.area.ui_type != 'UV':
 			return False
-		if not bpy.context.active_object:
-			return False
-		if bpy.context.active_object not in bpy.context.selected_objects:
-			return False
-		if len(bpy.context.selected_objects) != 1:
-			return False
-		if bpy.context.active_object.type != 'MESH':
-			return False
-		return True
-	
+		objects, _ = utilities_color.get_target_objects(context)
+		return len(objects) > 0
 
 	def execute(self, context):
-		select_color(self, context, self.index)
+		found = select_color(context, self.index)
+		if not found:
+			self.report({'WARNING'}, f"No faces use Color ID {self.index + 1}")
 		return {'FINISHED'}
 
 
-
-def select_color(self, context, index):
-	obj = bpy.context.active_object
-	
-	# Check for missing slots, materials,..
-	if index >= len(obj.material_slots):
-		self.report({'ERROR_INVALID_INPUT'}, "No material slot for color '{}' found".format(index) )
-		return
-
-	if not obj.material_slots[index].material:
-		self.report({'ERROR_INVALID_INPUT'}, "No material found for material slot '{}'".format(index) )
-		return		
-
-	if obj.mode != 'EDIT':
+def select_color(context, index):
+	objects, edit = utilities_color.get_target_objects(context)
+	if not edit:
 		bpy.ops.object.mode_set(mode='EDIT')
+		objects, edit = utilities_color.get_target_objects(context)
 
-	# Select faces
-	bm = bmesh.from_edit_mesh(obj.data)
-	bpy.ops.mesh.select_all(action='DESELECT')
-	for face in bm.faces:
-		if face.material_index == index:
-			face.select = True
+	material = utilities_color.get_material(index)
+	found = 0
+	for obj in objects:
+		bm = utilities_color.get_bmesh(obj, True)
+		for face in bm.faces:
+			face.select = False
+		for edge in bm.edges:
+			edge.select = False
+		for vert in bm.verts:
+			vert.select = False
 
-	# Show Material Tab
+		slots = obj.material_slots
+		if index < len(slots) and slots[index].material is not None and slots[index].material == material:
+			for face in bm.faces:
+				if face.material_index == index:
+					face.select = True
+					found += 1
+		bm.select_flush_mode()
+		utilities_color.finish_bmesh(obj, bm, True)
+
 	utilities_color.update_properties_tab()
-
-	#Change View mode
 	utilities_color.update_view_mode()
+	return found
